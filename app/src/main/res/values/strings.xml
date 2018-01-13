@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">SoundZZZ</string>
+    <string name="silent_button">Silent</string>
+    <string name="quiet_button">Quiet</string>
+    <string name="loud_button">Loud</string>
+    <string name="alarm_textView">Alarm</string>
+    <string name="music_textView">Music</string>
+    <string name="ring_textView">Ring</string>
+    <string name="system_textView">System</string>
+    <string name="voice_textView">Voice</string>
+</resources>
