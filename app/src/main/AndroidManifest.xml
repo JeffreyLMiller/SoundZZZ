@@ -17,17 +17,7 @@
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
-                <action android:name="android.intent.action.VIEW"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <!-- Accepts URIs that begin with "http://www.jeffreylmiller.com/SoundZZZ” -->
-                <data android:scheme="http"
-                      android:host="www.jeffreylmiller.com"
-                      android:pathPrefix="/SoundZZZ" />
-                <!-- note that the leading "/" is required for pathPrefix-->
-
             </intent-filter>
         </activity>
 

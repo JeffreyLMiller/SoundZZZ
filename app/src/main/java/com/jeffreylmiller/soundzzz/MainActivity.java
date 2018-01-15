@@ -15,11 +15,6 @@ import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final int ALARM = AudioManager.STREAM_ALARM;
-    private static final int MUSIC = AudioManager.STREAM_MUSIC;
-    private static final int RING = AudioManager.STREAM_RING;
-    private static final int SYSTEM = AudioManager.STREAM_SYSTEM;
-    private static final int VOICE = AudioManager.STREAM_VOICE_CALL;
 
 
     private Button mSilentButton, mQuietButton, mLoudButton;
@@ -29,8 +24,9 @@ public class MainActivity extends AppCompatActivity {
             mRingValueTextView,
             mSystemValueTextView,
             mVoiceValueTextView;
-    private int alarmValue, musicValue, ringValue, systemValue, voiceValue;
 
+    private SoundSettings silentSettings, quietSettings, loudSettings;
+    private SoundController mSoundController;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,12 +61,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        try {
-            mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-
+        mSoundController = SoundController.get(this.getApplicationContext());
         //Make sure application has ability to alter the Do Not Disturb state from Android 23 up
         //from https://stackoverflow.com/questions/39151453/in-android-7-api-level-24-my-app-is-not-allowed-to-mute-phone-set-ringer-mode
 
@@ -89,57 +80,50 @@ public class MainActivity extends AppCompatActivity {
                             .ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
             startActivity(intent);
         }
+        silentSettings = new SoundSettings(0,0,0,0,0,SoundController.RINGER_SILENT);
+        quietSettings = new SoundSettings(
+                mSoundController.getMaxVolume(SoundController.ALARM)/2,
+                mSoundController.getMaxVolume(SoundController.MUSIC)/2,
+                mSoundController.getMaxVolume(SoundController.SYSTEM)/2,
+                mSoundController.getMaxVolume(SoundController.VOICE)/2,
+                mSoundController.getMaxVolume(SoundController.RING)/2,
+                SoundController.RINGER_VIBRATE);
+        loudSettings = new SoundSettings(
+                mSoundController.getMaxVolume(SoundController.ALARM),
+                mSoundController.getMaxVolume(SoundController.MUSIC),
+                mSoundController.getMaxVolume(SoundController.SYSTEM),
+                mSoundController.getMaxVolume(SoundController.VOICE),
+                mSoundController.getMaxVolume(SoundController.RING),
+                SoundController.RINGER_VIBRATE);
+
+        updateSoundValueTextFields();
+
     }
 
     private void setLoudMode() {
-        mAudioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
-        mAudioManager.setStreamVolume(ALARM,
-                mAudioManager.getStreamMaxVolume(ALARM),AudioManager.FLAG_VIBRATE);
-        mAudioManager.setStreamVolume(MUSIC,
-                mAudioManager.getStreamMaxVolume(MUSIC),AudioManager.FLAG_VIBRATE);
-        mAudioManager.setStreamVolume(RING,
-                mAudioManager.getStreamMaxVolume(RING),AudioManager.FLAG_VIBRATE);
-        mAudioManager.setStreamVolume(SYSTEM,
-                mAudioManager.getStreamMaxVolume(SYSTEM),AudioManager.FLAG_VIBRATE);
-        mAudioManager.setStreamVolume(VOICE,
-                mAudioManager.getStreamMaxVolume(VOICE),AudioManager.FLAG_VIBRATE);
+        mSoundController.setVolume(loudSettings);
         updateSoundValueTextFields();
     }
 
     private void setQuietMode() {
-        mAudioManager.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
-        mAudioManager.setStreamVolume(ALARM,
-                mAudioManager.getStreamMaxVolume(ALARM)/2,AudioManager.FLAG_VIBRATE);
-        mAudioManager.setStreamVolume(MUSIC,
-                mAudioManager.getStreamMaxVolume(MUSIC)/2,AudioManager.FLAG_VIBRATE);
-        mAudioManager.setStreamVolume(RING,
-                mAudioManager.getStreamMaxVolume(RING)/2,AudioManager.FLAG_VIBRATE);
-        mAudioManager.setStreamVolume(SYSTEM,
-                mAudioManager.getStreamMaxVolume(SYSTEM)/2,AudioManager.FLAG_VIBRATE);
-        mAudioManager.setStreamVolume(VOICE,
-                mAudioManager.getStreamMaxVolume(VOICE)/2,AudioManager.FLAG_VIBRATE);
+        mSoundController.setVolume(quietSettings);
         updateSoundValueTextFields();
     }
 
     private void setSilentMode() {
-        mAudioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
-        mAudioManager.setStreamVolume(ALARM,
-                0,AudioManager.FLAG_VIBRATE);
-        mAudioManager.setStreamVolume(MUSIC,
-                0,AudioManager.FLAG_VIBRATE);
-        mAudioManager.setStreamVolume(RING,
-                0,AudioManager.FLAG_VIBRATE);
-        mAudioManager.setStreamVolume(SYSTEM,
-                0,AudioManager.FLAG_VIBRATE);
-        mAudioManager.setStreamVolume(VOICE,
-                0,AudioManager.FLAG_VIBRATE);
+        mSoundController.setVolume(silentSettings);
         updateSoundValueTextFields();
     }
     private void updateSoundValueTextFields(){
-        mAlarmValueTextView.setText(String.format(Locale.ENGLISH,"%d",mAudioManager.getStreamVolume(ALARM)));
-        mMusicValueTextView.setText(String.format(Locale.ENGLISH,"%d",mAudioManager.getStreamVolume(MUSIC)));
-        mRingValueTextView.setText(String.format(Locale.ENGLISH,"%d",mAudioManager.getStreamVolume(RING)));
-        mSystemValueTextView.setText(String.format(Locale.ENGLISH,"%d",mAudioManager.getStreamVolume(SYSTEM)));
-        mVoiceValueTextView.setText(String.format(Locale.ENGLISH,"%d",mAudioManager.getStreamVolume(VOICE)));
+        mAlarmValueTextView.setText(String.format(
+                Locale.ENGLISH,"%d",mSoundController.getVolume(SoundController.ALARM)));
+        mMusicValueTextView.setText(String.format(
+                Locale.ENGLISH,"%d",mSoundController.getVolume(SoundController.MUSIC)));
+        mRingValueTextView.setText(String.format(
+                Locale.ENGLISH,"%d",mSoundController.getVolume(SoundController.RING)));
+        mSystemValueTextView.setText(String.format(
+                Locale.ENGLISH,"%d",mSoundController.getVolume(SoundController.SYSTEM)));
+        mVoiceValueTextView.setText(String.format(
+                Locale.ENGLISH,"%d",mSoundController.getVolume(SoundController.VOICE)));
     }
 }
