@@ -4,6 +4,6 @@
     <item>
         <bitmap
             android:gravity="center"
-            android:src="@drawable/sleep_icon"/>
+            android:src="@drawable/soundzzz_icon"/>
     </item>
 </layer-list>
