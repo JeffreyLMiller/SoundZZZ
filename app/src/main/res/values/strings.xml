@@ -8,4 +8,5 @@
     <string name="ring_textView">Ring</string>
     <string name="system_textView">System</string>
     <string name="voice_textView">Voice</string>
+    <string name="schedule_time_picture">Picture of the sky</string>
 </resources>

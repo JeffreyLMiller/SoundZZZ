@@ -21,8 +21,6 @@ public class SoundController {
 
     private AudioManager mAudioManager;
 
-
-
     public SoundController(Context context){
         try {
             mAudioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
