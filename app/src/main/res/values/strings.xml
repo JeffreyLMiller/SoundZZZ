@@ -9,4 +9,10 @@
     <string name="system_textView">System</string>
     <string name="voice_textView">Voice</string>
     <string name="schedule_time_picture">Picture of the sky</string>
+    <string name="edit_sound_schedule_activity_title">Edit Sound Schedule</string>
+    <string name="edit_sound_schedule_name">Name</string>
+    <string name="edit_sound_schedule_time">Set Time</string>
+
+    <!-- Used for edit_sound_schedule activity -->
+
 </resources>
